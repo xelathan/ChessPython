@@ -36,8 +36,10 @@ def main():
     screen.fill(p.Color("white"))
 
     gs = ChessEngine.GameState()
-    loadImages()     #only do this once
+    validMoves = gs.getValidMoves()
+    moveMade = False    #flag var when a move is made
 
+    loadImages()     #only do this once
 
     running = True
     sqSelected = ()     #no sq is selected initially
@@ -48,12 +50,7 @@ def main():
                 running = False
                 sys.exit()
 
-            if event.type == p.KEYDOWN:
-                if event.key == p.K_ESCAPE:
-                    running = False
-                    sys.exit()
-
-            if event.type == p.MOUSEBUTTONDOWN:
+            elif event.type == p.MOUSEBUTTONDOWN:
                 location = p.mouse.get_pos() #(x,y) location of the mouse
                 col = location[0] // SQ_SIZE
                 row = location[1] // SQ_SIZE
@@ -68,12 +65,23 @@ def main():
                 if len(playerClicks) == 2:  #check to see if it is the 2nd click
                     move = ChessEngine.Move(playerClicks[0], playerClicks[1], gs.board)
                     print(move.getChessNotation())
-                    gs.makeMove(move)
+                    if move in validMoves:
+                        gs.makeMove(move)
+                        moveMade = True
                     sqSelected = ()
                     playerClicks = []
 
+            elif event.type == p.KEYDOWN:
+                if event.key == p.K_ESCAPE:
+                    running = False
+                    sys.exit()
+                if event.key == p.K_z:
+                    gs.undoMove()
+                    moveMade = True
 
-
+        if moveMade:
+            validMoves = gs.getValidMoves()
+            moveMade = False
         drawGameState(screen, gs)
         clock.tick(MAX_FPS)
         p.display.update()
