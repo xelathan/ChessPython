@@ -56,13 +56,15 @@ class GameState():
                 turn = self.board[row][col][0]
                 if (turn == "w" and self.whiteToMove) or (turn == "b" and not self.whiteToMove):
                     pieceType = self.board[row][col][1]
-                    self.moveFunctions[pieceType](row, col, moves)  # calls the appropriate move function based on piece type
+                    self.moveFunctions[pieceType](row, col,
+                                                  moves)  # calls the appropriate move function based on piece type
 
         return moves
 
     """
     Get all pawn moves at the row and col and add these to the list
     """
+
     def getPawnMoves(self, row, col, moves):
         if self.whiteToMove:  # when a white pawn moves
             if self.board[row - 1][col] == "--":  # 1 square pawn advance
@@ -87,13 +89,75 @@ class GameState():
                 if self.board[row + 1][col + 1][0] == "w":
                     moves.append(Move((row, col), (row + 1, col + 1), self.board))
 
-
     def getRookMoves(self, row, col, moves):
-        if self.whiteToMove:
-            pass
-        pass
+        enemyColor = "b" if self.whiteToMove else "w"
+        if row > 0:  # Check backwards
+            for r in reversed((range(0, row))):
+                if self.board[r][col] == "--":
+                    moves.append(Move((row, col), (r, col), self.board))
+                elif self.board[r][col][0] == enemyColor:
+                    moves.append(Move((row, col), (r, col), self.board))
+                    break
+                else:
+                    break
+        if row < 7:  # Check forwards
+            for r in range(row + 1, len(self.board)):
+                if self.board[r][col] == "--":
+                    moves.append(Move((row, col), (r, col), self.board))
+                elif self.board[r][col][0] == enemyColor:
+                    moves.append(Move((row, col), (r, col), self.board))
+                    break
+                else:
+                    break
+        if col > 0:  # Check left
+            for c in reversed((range(0, col))):
+                if self.board[row][c] == "--":
+                    moves.append(Move((row, col), (row, c), self.board))
+                elif self.board[row][c][0] == enemyColor:
+                    moves.append(Move((row, col), (row, c), self.board))
+                    break
+                else:
+                    break
+        if col < 7:  # Check Right
+            for c in range(col + 1, len(self.board)):
+                if self.board[row][c] == "--":
+                    moves.append(Move((row, col), (row, c), self.board))
+                elif self.board[row][c][0] == enemyColor:
+                    moves.append(Move((row, col), (row, c), self.board))
+                    break
+                else:
+                    break
 
     def getKnightMoves(self, row, col, moves):
+        enemyColor = "b" if self.whiteToMove else "w"
+        if col > 0:
+            if row < 6:  # backwards left long l
+                if self.board[row + 2][col - 1] == "--" or self.board[row + 2][col - 1][0] == enemyColor:
+                    moves.append(Move((row, col), (row + 2, col - 1), self.board))
+            if row > 1:  # forwards left long l
+                if self.board[row - 2][col - 1] == "--" or self.board[row - 2][col - 1][0] == enemyColor:
+                    moves.append(Move((row, col), (row - 2, col - 1), self.board))
+        if col < 7:
+            if row < 6:  # backwards right long l
+                if self.board[row + 2][col + 1] == "--" or self.board[row + 2][col + 1][0] == enemyColor:
+                    moves.append(Move((row, col), (row + 2, col + 1), self.board))
+            if row > 1:  # forwards right long l
+                if self.board[row - 2][col + 1] == "--" or self.board[row - 2][col + 1][0] == enemyColor:
+                    moves.append(Move((row, col), (row - 2, col + 1), self.board))
+        if col > 1:
+            if row > 0:  # forwards left horizontal l
+                if self.board[row - 1][col - 2] == "--" or self.board[row - 1][col - 2][0] == enemyColor:
+                    moves.append(Move((row, col), (row - 1, col - 2), self.board))
+            if row < 7:  # backwards left horizontal l
+                if self.board[row + 1][col - 2] == "--" or self.board[row + 1][col - 2][0] == enemyColor:
+                    moves.append(Move((row, col), (row + 1, col - 2), self.board))
+        if col < 6:
+            if row > 0:
+                if self.board[row - 1][col + 2] == "--" or self.board[row - 1][col + 2][0] == enemyColor:
+                    moves.append(Move((row, col), (row - 1, col + 2), self.board))
+            if row < 7:
+                if self.board[row + 1][col + 2] == "--" or self.board[row + 1][col + 2][0] == enemyColor:
+                    moves.append(Move((row, col), (row + 1, col + 2), self.board))
         pass
 
     def getBishopMoves(self, row, col, moves):
