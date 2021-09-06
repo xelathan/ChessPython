@@ -226,10 +226,36 @@ class GameState():
         pass
 
     def getQueenMoves(self, row, col, moves):
+        self.getRookMoves(row, col, moves)
+        self.getBishopMoves(row, col , moves)
         pass
 
     def getKingMoves(self, row, col, moves):
-        pass
+        enemyColor = "b" if self.whiteToMove else "w"
+        if col > 0:
+            if self.board[row][col - 1] == "--" or self.board[row][col - 1][0] == enemyColor:
+                moves.append(Move((row, col), (row, col - 1), self.board))
+            if row > 0:
+                if self.board[row - 1][col - 1] == "--" or self.board[row - 1][col - 1][0] == enemyColor:
+                    moves.append(Move((row, col), (row - 1, col - 1), self.board))
+            if row < 7:
+                if self.board[row + 1][col - 1] == "--" or self.board[row + 1][col - 1][0] == enemyColor:
+                    moves.append(Move((row, col), (row + 1, col - 1), self.board))
+        if row > 0:
+            if self.board[row - 1][col] == "--" or self.board[row - 1][col][0] == enemyColor:
+                moves.append(Move((row, col), (row - 1, col), self.board))
+        if row < 7:
+            if self.board[row + 1][col] == "--" or self.board[row + 1][col][0] == enemyColor:
+                moves.append(Move((row, col), (row + 1, col), self.board))
+        if col < 7:
+            if self.board[row][col + 1] == "--" or self.board[row][col + 1][0] == enemyColor:
+                moves.append(Move((row, col), (row, col + 1), self.board))
+            if row < 7:
+                if self.board[row + 1][col + 1] == "--" or self.board[row + 1][col + 1][0] == enemyColor:
+                    moves.append(Move((row, col), (row + 1, col + 1), self.board))
+            if row > 0:
+                if self.board[row - 1][col + 1] == "--" or self.board[row - 1][col + 1][0] == enemyColor:
+                    moves.append(Move((row, col), (row - 1, col + 1), self.board))
 
 
 class Move():
