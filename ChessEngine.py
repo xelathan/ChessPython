@@ -17,7 +17,7 @@ class GameState():
             ["--", "--", "--", "--", "--", "--", "--", "--"],
             ["--", "--", "--", "--", "--", "--", "--", "--"],
             ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"],
-            ["wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"],
+            ["wB", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"],
         ]
         self.whiteToMove = True
         self.moveLog = []
@@ -161,6 +161,68 @@ class GameState():
         pass
 
     def getBishopMoves(self, row, col, moves):
+        enemyColor = "b" if self.whiteToMove else "w"
+        if row > 0:
+            if col > 0:
+                try:
+                    for r in reversed(range(0, row)):
+                        for c in reversed(range(0, col)):
+                            if abs(row - r) == abs(col - c):
+                                if self.board[r][c] == "--":
+                                    moves.append(Move((row, col), (r, c), self.board))
+                                elif self.board[r][c][0] == enemyColor:
+                                    moves.append(Move((row, col), (r, c), self.board))
+                                    raise StopIteration
+                                else:
+                                    raise StopIteration
+                except StopIteration:
+                    pass
+            if col < 7:
+                try:
+                    for r in reversed(range(0, row)):
+                        for c in range(col + 1, len(self.board[0])):
+                            if abs(row - r) == abs(col - c):
+                                if self.board[r][c] == "--":
+                                    moves.append(Move((row, col), (r, c), self.board))
+                                elif self.board[r][c][0] == enemyColor:
+                                    moves.append(Move((row, col), (r, c), self.board))
+                                    raise StopIteration
+                                else:
+                                    raise StopIteration
+                except StopIteration:
+                    pass
+
+        if row < 7:
+            if col > 0:
+                try:
+                    for r in range(row + 1, len(self.board)):
+                        for c in reversed(range(0, col)):
+                            if abs(row - r) == abs(col - c):
+                                if self.board[r][c] == "--":
+                                    moves.append(Move((row, col), (r, c), self.board))
+                                elif self.board[r][c][0] == enemyColor:
+                                    moves.append(Move((row, col), (r, c), self.board))
+                                    raise StopIteration
+                                else:
+                                    raise StopIteration
+                except StopIteration:
+                    pass
+            if col < 7:
+                try:
+                    for r in range(row + 1, len(self.board)):
+                        for c in range(col + 1, len(self.board[0])):
+                            if abs(row - r) == abs(col - c):
+                                if self.board[r][c] == "--":
+                                    moves.append(Move((row, col), (r, c), self.board))
+                                elif self.board[r][c][0] == enemyColor:
+                                    moves.append(Move((row, col), (r, c), self.board))
+                                    raise StopIteration
+                                else:
+                                    raise StopIteration
+                except StopIteration:
+                    pass
+
+
         pass
 
     def getQueenMoves(self, row, col, moves):
