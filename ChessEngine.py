@@ -56,24 +56,29 @@ class GameState():
     """
 
     def getValidMoves(self):
+        # 1. Generate all possilbe moves
         moves = self.getAllPossibleMoves()
+        # 2. for each move make the move
         for i in range(len(moves) - 1, -1, -1):
             self.makeMove(moves[i])
+            # 3. generate all opponents move
+            # 4. for each of the opponents move see if they attack your king
             self.whiteToMove = not self.whiteToMove
             if self.inCheck():
-                moves.remove((moves[i]))
+                # 5. if they do attack your king it's not a valid move
+                moves.remove(moves[i])
             self.whiteToMove = not self.whiteToMove
             self.undoMove()
-        if len(moves) == 0:
-            if self.inCheck():
-                self.checkMate = True
-            else:
-                self.staleMate = True
-        else:
-            self.checkMate = False
-            self.staleMate = False
-        return moves
 
+            if len(moves) == 0:
+                if self.inCheck():
+                    self.checkMate = True
+                else:
+                    self.staleMate = True
+            else:
+                self.checkMate = False
+                self.staleMate = False
+        return moves
 
     """
     Determine if the current player is in check
@@ -95,6 +100,7 @@ class GameState():
             if move.endRow == r and move.endCol == c:  # square is under attack
                 return True
         return False
+        pass
 
     """
     All moves without considering checks
